@@ -37,9 +37,15 @@
         <button type="submit">Find president</button>
     </form>
 
+
     <div style="display: flex; align-items: center;">
         <p>Get all presidents:</p>
         <button id="allButton">Get all Presidents</button>
+    </div>
+
+    <div style="display: flex; align-items: center;">
+        <p>Get a RANDOM president:</p>
+        <button id="randomButton">Get President</button>
     </div>
 
     <div id="results"></div>
@@ -56,23 +62,28 @@
         const electionEnd = document.querySelector("#electionEnd");
         const searchForm = document.querySelector("#searchForm");
         const searchInput = document.querySelector("#searchInput");
+        const randomButton = document.querySelector("#randomButton");
+
+        const setSinglePresident = (name, image, party, presidency, election) => {
+            return `<div>
+                        <h3>${name}</h3>
+                        <div style="width: 300px;">
+                            <img style="width: 100%; margin-bottom: 16px" src=${image} alt=${name} />
+                        </div>
+                        <i>${party}</i>
+                        <p>Presidency: ${presidency}</p>
+                        <p>Elected: ${election.map(year => {
+                return `<span> ${year}</span>`
+            })}
+                            </p>
+                            <hr>
+                        </div>`
+        }
 
 
         const setPresidents = presidentsArr => {
             results.innerHTML = presidentsArr.map(president => {
-                return `<div>
-                            <h3>${president.name}</h3>
-                            <div style="width: 300px;">
-                                <img style="width: 100%; margin-bottom: 16px" src=${president.image} alt=${president.name} />
-                            </div>
-                            <i>${president.party}</i>
-                            <p>Presidency: ${president.presidency}</p>
-                            <p>Elected: ${president.election.map(year => {
-                    return `<span> ${year}</span>`
-                })}
-                            </p>
-                            <hr>
-                        </div>`
+                return setSinglePresident(president.name, president.image, president.party, president.presidency, president.election);
             }).join("")
         }
 
@@ -135,6 +146,19 @@
                 .then(res => res.json())
                 .then(data => {
                     setPresidents(data.presidents);
+                })
+                .catch(err => console.log(err))
+        })
+
+
+        // Render Random President
+        randomButton.addEventListener("click", (e) => {
+            results.innerHTML = "";
+            fetch("/presidents?result=random")
+                .then(res => res.json())
+                .then(data => {
+                    const { name, image, party, presidency, election } = data.president;
+                    results.innerHTML = setSinglePresident(name, image, party, presidency, election);
                 })
                 .catch(err => console.log(err))
         })
