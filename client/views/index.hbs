@@ -31,6 +31,12 @@
         <button type="submit">Get Presidents</button>
     </form>
 
+    <form id="searchForm">
+        <label for="searchInput">Search by name</label>
+        <input type="text" id="searchInput" name="searchInput" placeholder="Enter name">
+        <button type="submit">Find president</button>
+    </form>
+
     <div style="display: flex; align-items: center;">
         <p>Get all presidents:</p>
         <button id="allButton">Get all Presidents</button>
@@ -48,6 +54,9 @@
         const electionForm = document.querySelector("#electionForm");
         const electionStart = document.querySelector("#electionStart");
         const electionEnd = document.querySelector("#electionEnd");
+        const searchForm = document.querySelector("#searchForm");
+        const searchInput = document.querySelector("#searchInput");
+
 
         const setPresidents = presidentsArr => {
             results.innerHTML = presidentsArr.map(president => {
@@ -93,6 +102,28 @@
                 })
                 .catch(err => console.log(err));
         })
+
+
+        // Search president by name
+        searchForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            results.innerHTML = "";
+            const searchValue = searchInput.value;
+
+            if (searchValue) {
+                fetch(`/presidents?search=${searchValue}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.presidents.length > 0) {
+                            setPresidents(data.presidents)
+                        } else {
+                            results.innerHTML = "Couldn't find any president. Please try again!"
+                        }
+                    })
+                    .catch(err => console.log(err));
+            }
+        })
+
 
         // Render all Presidents
         allButton.addEventListener("click", (e) => {
