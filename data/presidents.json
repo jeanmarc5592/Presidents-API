@@ -64,7 +64,7 @@
   },
   {
     "name": "John Tyler",
-    "image": "./images/John_Tyler.jpg",
+    "image": "./images/John_Tyler_Jr.jpg",
     "presidency": "April 4, 1841 - March 4, 1845",
     "party": "Whig",
     "election": [1840]
@@ -295,7 +295,7 @@
   },
   {
     "name": "George W. Bush",
-    "image": "./images/George_W_Bush.jpg",
+    "image": "./images/George_W_Bush.jpeg",
     "presidency": "January 20, 2001 - January 20, 2009",
     "party": "Republican",
     "election": [2001, 2004]
