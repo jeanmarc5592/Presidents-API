@@ -8,6 +8,10 @@ const app = express();
 
 // Define paths for Express Config
 const viewsPath = path.join(__dirname, "../client/views");
+const imagesPath = path.join(__dirname, "../data/images");
+
+// Use static files
+app.use("/images", express.static(imagesPath));
 
 // Set up hanldebars view engine and views location
 app.set("view engine", "hbs");
