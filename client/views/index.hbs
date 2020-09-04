@@ -62,6 +62,9 @@
             results.innerHTML = presidentsArr.map(president => {
                 return `<div>
                             <h3>${president.name}</h3>
+                            <div style="width: 300px;">
+                                <img style="width: 100%; margin-bottom: 16px" src=${president.image} alt=${president.name} />
+                            </div>
                             <i>${president.party}</i>
                             <p>Presidency: ${president.presidency}</p>
                             <p>Elected: ${president.election.map(year => {
