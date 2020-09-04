@@ -1,0 +1,112 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U.S. Presidents</title>
+</head>
+
+<body>
+    <h1>U.S. Presidents API</h1>
+
+    <form id="filterForm">
+        <label for="party">Filter by party:</label>
+        <select name="party" id="partyFilter">
+            <option value="democratic" selected>democratic</option>
+            <option value="republican">republican</option>
+            <option value="whig">whig</option>
+            <option value="democratic-republican">democratic-republican</option>
+            <option value="federalist">federalist</option>
+            <option value="unaffiliated">unaffiliated</option>
+        </select>
+        <button type="submit">Get Presidents</button>
+    </form>
+
+    <form id="electionForm">
+        <label for="election">Filter by election:</label>
+        <label for="election-start">Starting year:</label>
+        <input type="number" name="election-start" id="electionStart" min="1788" max="2016" step="1" value="1788">
+        <label for="election-end">Ending year:</label>
+        <input type="number" name="election-end" id="electionEnd" min="1788" max="2016" step="1" value="2016">
+        <button type="submit">Get Presidents</button>
+    </form>
+
+    <div style="display: flex; align-items: center;">
+        <p>Get all presidents:</p>
+        <button id="allButton">Get all Presidents</button>
+    </div>
+
+    <div id="results"></div>
+
+
+    <script>
+        console.log("client side javascript up and running!")
+        const allButton = document.querySelector("#allButton");
+        const results = document.querySelector("#results");
+        const filterForm = document.querySelector("#filterForm");
+        const partyFilter = document.querySelector("#partyFilter");
+        const electionForm = document.querySelector("#electionForm");
+        const electionStart = document.querySelector("#electionStart");
+        const electionEnd = document.querySelector("#electionEnd");
+
+        const setPresidents = presidentsArr => {
+            results.innerHTML = presidentsArr.map(president => {
+                return `<div>
+                            <h3>${president.name}</h3>
+                            <i>${president.party}</i>
+                            <p>Presidency: ${president.presidency}</p>
+                            <p>Elected: ${president.election.map(year => {
+                    return `<span> ${year}</span>`
+                })}
+                            </p>
+                            <hr>
+                        </div>`
+            }).join("")
+        }
+
+        // Filter by party
+        filterForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            results.innerHTML = "";
+            const value = partyFilter.options[partyFilter.selectedIndex].value;
+
+            fetch(`/presidents?result=all&party=${partyFilter.value}`)
+                .then(res => res.json())
+                .then(data => {
+                    setPresidents(data.presidents)
+                })
+                .catch(err => console.log(err))
+        })
+
+
+        // Filter by election
+        electionForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            results.innerHTML = "";
+            const start = parseInt(electionStart.value);
+            const end = parseInt(electionEnd.value);
+
+            fetch(`/presidents?result=all&election=${start},${end}`)
+                .then(res => res.json())
+                .then(data => {
+                    setPresidents(data.presidents);
+                })
+                .catch(err => console.log(err));
+        })
+
+        // Render all Presidents
+        allButton.addEventListener("click", (e) => {
+            results.innerHTML = "";
+            fetch("/presidents?result=all")
+                .then(res => res.json())
+                .then(data => {
+                    setPresidents(data.presidents);
+                })
+                .catch(err => console.log(err))
+        })
+
+
+    </script>
+</body>
+
+</html>

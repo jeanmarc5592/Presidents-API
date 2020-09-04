@@ -1,8 +1,22 @@
 const express = require("express");
+const hbs = require("hbs");
+const path = require("path");
 const presidentsList = require("../data/presidents.json");
 const isEmptyObj = require("./utils/isEmptyObj");
 
 const app = express();
+
+// Define paths for Express Config
+const viewsPath = path.join(__dirname, "../client/views");
+
+// Set up hanldebars view engine and views location
+app.set("view engine", "hbs");
+app.set("views", viewsPath);
+
+// Route Handlers
+app.get("/", (req, res) => {
+  return res.render("index");
+});
 
 app.get("/presidents", (req, res) => {
   const noQuery = isEmptyObj(req.query);
